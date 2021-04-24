@@ -16,6 +16,31 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 
+# Use include() to add paths from the catalog application
+from django.urls import include
+# Use RedirectView to  takes the new relative URL to redirect to (/catalog/) as its first 
+# argument when the URL pattern specified in the path() function is matched (the root URL, in this case).
+from django.views.generic import RedirectView
+
+# Use static() to add url mapping to serve static files during development (only)
+from django.conf import settings
+from django.conf.urls.static import static
+
+
+
+
 urlpatterns = [
     path('admin/', admin.site.urls),
 ]
+# add catalog url pattern
+urlpatterns += [
+    path('catalog/', include('catalog.urls')),
+]
+
+# Add URL maps to redirect the base URL to our application
+urlpatterns += [
+    path('', RedirectView.as_view(url='catalog/', permanent=True)),
+]
+
+#enable the serving of static files during development
+urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
