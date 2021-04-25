@@ -25,6 +25,7 @@ class Genre(models.Model):
 # and then to add them to the models.
 # Should the different languages be represented using model, a free text field, or a hard-coded selection list?
 
+
 class Language(models.Model):
     """Model representing a Language (e.g. English, French, Japanese, etc.)"""
     name = models.CharField(max_length=200,
@@ -64,6 +65,14 @@ class Book(models.Model):
     def get_absolute_url(self):
         """Returns the url to access a detail record for this book."""
         return reverse('book-detail', args=[str(self.id)])
+
+    # creates a string from the first three values of the genre field (if they exist) and
+    #  creates a short_description that can be used in the admin site for this method.
+    def display_genre(self):
+        """Create a string for the Genre. This is required to display genre in Admin."""
+        return ', '.join(genre.name for genre in self.genre.all()[:3])
+
+    display_genre.short_description = 'Genre'
 
 
 # The BookInstance represents a specific copy of a book that someone might borrow,
